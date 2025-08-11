@@ -1,4 +1,4 @@
-# Automated Trading System with Python for Stock
+# Automated Trading System with Python for US Stock Market
 
 ## 📖 Description
 
