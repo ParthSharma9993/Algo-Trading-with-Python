@@ -67,3 +67,35 @@ To run this project, you need:
 ## 📂 File Structure
 
 The project has a clear and logical file structure:
+
+
+.
+├── data/                       # Market data for various symbols.
+├── dashboards/                 # Files for visualization and dashboards.
+├── Stock-ml-genai-starter/     # Main project directory.
+├── Stock_venv/                 # Virtual environment.
+├── models/                     # Directory to store the trained machine learning model.
+│   └── my_model.joblib
+├── scripts/                    # All executable scripts.
+│   ├── live_trader.py          # Core live trading script.
+│   ├── train_model.py          # Script for training the model.
+│   ├── fetch_data.py           # Script to fetch market data.
+│   └── ...
+├── trade_logs/                 # Automatically generated logs of trades.
+│   └── positions.csv
+├── README.md                   # This file.
+└── requirements.txt            # Project dependencies.
+
+## 🤝 Contributing
+
+This project is a great starting point for algorithmic trading. Feel free to fork the repository, add your own strategies, and contribute back to the community!
+
+1.  Fork the Project.
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the Branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
