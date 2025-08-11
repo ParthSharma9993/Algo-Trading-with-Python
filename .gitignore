@@ -1,0 +1,30 @@
+#Ignore env
+
+.env
+.env.local
+.forex_venv
+forex_venv
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# IDE configs
+.vscode/
+.idea/
