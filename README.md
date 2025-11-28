@@ -1,4 +1,4 @@
-# Automated Trading System with Python for Forex
+# Automated Trading System with Python for Stocks Trading
 
 ## 📖 Description
 
