@@ -28,3 +28,23 @@ Thumbs.db
 # IDE configs
 .vscode/
 .idea/
+
+# Ignore raw data and logs
+data/
+trade_logs/
+*.csv
+*.json
+
+# Ignore generated charts / images
+charts/
+*.png
+*.jpg
+*.jpeg
+
+# Ignore HTML reports and notebooks
+*.html
+*.ipynb
+.ipynb_checkpoints/
+
+# Misc temp/log files
+*.log
