@@ -1,4 +1,4 @@
-# forex-ml-genai-starter
+# Stock-ml-genai-starter
 
 Starter repo: EUR/USD intraday ML + GenAI sentiment
 
