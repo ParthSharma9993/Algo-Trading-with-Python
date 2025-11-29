@@ -48,3 +48,17 @@ charts/
 
 # Misc temp/log files
 *.log
+
+charts/
+data/
+trade_logs/
+*.csv
+*.json
+*.html
+*.png
+*.jpg
+*.jpeg
+*.ipynb
+.ipynb_checkpoints/
+*.log
+
