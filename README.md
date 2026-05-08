@@ -70,22 +70,7 @@ The project has a clear and logical file structure:
 
 To see the content of the README.md file in a code block format, you can use the following markdown. This is the exact content that would be displayed on GitHub.
 
-Markdown
 
-# Automated Trading System with Python for Forex
-
-## 📖 Description
-
-This repository contains a robust algorithmic trading system built with Python, designed for real-time trade execution in the forex market. The system automates the process of data fetching, signal generation using a pre-trained model, and order placement. It's built to be modular and easy to manage, with a clear separation of concerns for each part of the trading pipeline.
-
-## ✨ Features
-
-* **Live Trading Execution:** The `live_trader.py` script acts as the core of the system, running a continuous loop to manage trading activities.
-* **Machine Learning Integration:** Uses a pre-trained model, saved with `joblib`, to generate trading signals.
-* **Persistent Position Tracking:** Automatically restores open positions from a log file (`trade_logs/positions.csv`) to ensure continuity even after restarting the script.
-* **Modular Scripts:** The `scripts` directory contains separate modules for key functionalities, including data fetching (`fetch_data.py`), model training (`train_model.py`), and data visualization (`plot_advanced.py`).
-* **Configuration:** Key trading parameters like `SYMBOLS`, `SLEEP_SECONDS`, and `POSITION_SIZE` are easily configurable at the top of the `live_trader.py` script.
-* **Dependency Management:** A `requirements.txt` file and a dedicated virtual environment (`forex_venv`) are included for easy setup.
 
 ## ⚙️ Prerequisites
 
