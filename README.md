@@ -1,159 +1,298 @@
-# Automated Trading System with Python for Stocks Trading
+<div align="center">
 
-## 📖 Description
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=200&section=header&text=AlgoTrade-ML&fontSize=60&fontColor=00d4ff&fontAlignY=38&desc=ML-Powered%20Algorithmic%20Trading%20System&descAlignY=58&descSize=18&descColor=a8dadc" width="100%"/>
 
-This repository contains a robust algorithmic trading system built with Python, designed for real-time trade execution in the stock market. The system automates the process of data fetching, signal generation using a pre-trained model, and order placement. It's built to be modular and easy to manage, with a clear separation of concerns for each part of the trading pipeline.
+<br/>
 
-## ✨ Features
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML%20Core-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
+[![Pandas](https://img.shields.io/badge/Pandas-Data%20Pipeline-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org)
+[![Joblib](https://img.shields.io/badge/Joblib-Model%20Serialization-green?style=for-the-badge)](https://joblib.readthedocs.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-* **Live Trading Execution:** The `live_trader.py` script acts as the core of the system, running a continuous loop to manage trading activities.
-* **Machine Learning Integration:** Uses a pre-trained model, saved with `joblib`, to generate trading signals.
-* **Persistent Position Tracking:** Automatically restores open positions from a log file (`trade_logs/positions.csv`) to ensure continuity even after restarting the script.
-* **Modular Scripts:** The `scripts` directory contains separate modules for key functionalities, including data fetching (`fetch_data.py`), model training (`train_model.py`), and data visualization (`plot_advanced.py`).
-* **Configuration:** Key trading parameters like `SYMBOLS`, `SLEEP_SECONDS`, and `POSITION_SIZE` are easily configurable at the top of the `live_trader.py` script.
-* **Dependency Management:** A `requirements.txt` file and a dedicated virtual environment (`forex_venv`) are included for easy setup.
+<br/>
 
-## ⚙️ Prerequisites
+> **A production-grade, modular algorithmic trading system** that integrates a trained ML model for real-time signal generation, live trade execution, and automated position management — built end-to-end in Python.
 
-To run this project, you need:
+<br/>
 
-* **Python** (3.8 or higher)
-* **pip** (Python package installer)
+[Overview](#-overview) • [Architecture](#-system-architecture) • [Tech Stack](#-tech-stack) • [Pipeline](#-ml-pipeline) • [Setup](#-installation) • [Usage](#-usage) • [File Structure](#-file-structure)
+
+</div>
+
+---
+
+## 🎯 Overview
+
+AlgoTrade-ML is not a backtesting toy — it's a **live trading system** with a full ML lifecycle baked in. The system fetches real-time market data, runs it through a pre-trained machine learning model to generate buy/sell signals, and executes orders automatically while tracking positions persistently across restarts.
+
+### What makes this different from a typical ML notebook?
+
+| Typical ML Project | AlgoTrade-ML |
+|---|---|
+| Trains a model, shows accuracy metrics | Trains → serializes → deploys model into a live loop |
+| Runs once, outputs a result | Continuous execution loop with configurable intervals |
+| No state management | Persistent position tracking via CSV — survives restarts |
+| Monolithic script | Modular pipeline: fetch → train → signal → execute |
+
+---
+
+## 🏗 System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     AlgoTrade-ML Pipeline                    │
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │  Data Layer  │───▶│  ML Engine   │───▶│ Trade Engine │  │
+│  │              │    │              │    │              │  │
+│  │ fetch_data   │    │ train_model  │    │ live_trader  │  │
+│  │    .py       │    │    .py       │    │    .py       │  │
+│  │              │    │              │    │              │  │
+│  │ • OHLCV data │    │ • Feature    │    │ • Signal     │  │
+│  │ • Multi-     │    │   engineering│    │   evaluation │  │
+│  │   symbol     │    │ • Model fit  │    │ • Order exec │  │
+│  │ • Raw CSV    │    │ • joblib save│    │ • Position   │  │
+│  └──────────────┘    └──────────────┘    │   tracking   │  │
+│                                          └──────┬───────┘  │
+│                                                 │           │
+│                             ┌───────────────────▼────────┐ │
+│                             │       Persistence Layer     │ │
+│                             │  trade_logs/positions.csv   │ │
+│                             │  • Open positions restored  │ │
+│                             │  • Survives system restart  │ │
+│                             └────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚙️ Tech Stack
+
+### Core Language
+| Tool | Version | Role |
+|------|---------|------|
+| **Python** | 3.8+ | Primary language |
+
+### Machine Learning
+| Library | Role |
+|---------|------|
+| **Scikit-learn** | Model training — classification/regression for signal generation |
+| **Joblib** | Model serialization (`my_model.joblib`) — zero-overhead reload for live inference |
+| **NumPy** | Numerical operations, feature arrays |
+| **Pandas** | Data ingestion, feature engineering, time-series manipulation |
+
+### Trading & Data
+| Library | Role |
+|---------|------|
+| **yfinance / custom fetch** | Real-time and historical OHLCV market data ingestion |
+| **CSV / trade_logs** | Persistent position tracking across restarts |
+
+### Visualization & Analysis
+| Library | Role |
+|---------|------|
+| **Matplotlib / Plotly** | `plot_advanced.py` — signal overlays, P&L curves, trade distribution |
+
+### Dev & Ops
+| Tool | Role |
+|------|------|
+| **Virtual Environment** | Isolated dependency management (`forex_venv`) |
+| **requirements.txt** | Reproducible installs |
+| **.gitignore** | Clean repo hygiene |
+
+---
+
+## 🧠 ML Pipeline
+
+The ML lifecycle is fully implemented — from raw data to live inference:
+
+```
+Step 1: Data Collection
+───────────────────────
+fetch_data.py
+  └── Pulls OHLCV data for configured symbols
+  └── Saves to data/ as raw CSV files
+
+Step 2: Feature Engineering + Model Training
+─────────────────────────────────────────────
+train_model.py
+  └── Loads raw market data
+  └── Engineers features (returns, rolling stats, indicators)
+  └── Trains ML classifier/regressor
+  └── Evaluates on held-out data
+  └── Serializes → models/my_model.joblib
+
+Step 3: Live Signal Generation + Execution
+───────────────────────────────────────────
+live_trader.py (continuous loop)
+  └── Fetches latest market data
+  └── Loads my_model.joblib (zero re-training overhead)
+  └── Generates BUY / SELL / HOLD signal
+  └── Places order if signal threshold met
+  └── Updates trade_logs/positions.csv
+  └── Sleeps → SLEEP_SECONDS → repeats
+```
+
+### Key Design Decisions
+
+**Why joblib for model persistence?**
+Joblib is purpose-built for serializing large NumPy arrays (which underpin Scikit-learn models). It's faster and more memory-efficient than pickle for ML artifacts — enabling sub-millisecond model reload in the live loop.
+
+**Why CSV for position tracking?**
+Lightweight, inspectable, and crash-safe. The live trader restores open positions from `trade_logs/positions.csv` on startup — meaning a system restart or network drop doesn't leave orphaned positions untracked.
+
+**Why a modular script structure?**
+Each concern (fetch, train, execute, visualize) is a separate module. You can retrain the model independently, swap data sources, or update the signal logic without touching the execution engine.
+
+---
 
 ## 🔧 Installation
 
-1.  **Clone the repository:**
+### Prerequisites
+- Python 3.8 or higher
+- pip
 
-    ```
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
-    ```
+### Steps
 
-2.  **Activate the virtual environment:**
-    The project uses a virtual environment named `forex_venv`.
+```bash
+# 1. Clone the repository
+git clone https://github.com/ParthSharma-2/Algo-Trading-with-Python.git
+cd Algo-Trading-with-Python
 
-    ```
-    # On Windows
-    forex_venv\Scripts\activate
-    # On macOS/Linux
-    source forex_venv/bin/activate
-    ```
+# 2. Create and activate a virtual environment
+python -m venv venv
 
-3.  **Install dependencies:**
+# On Windows
+venv\Scripts\activate
 
-    ```
-    pip install -r requirements.txt
-    ```
+# On macOS / Linux
+source venv/bin/activate
 
-## 🚀 Getting Started
+# 3. Install all dependencies
+pip install -r requirements.txt
+```
 
-1.  **Prepare your data and model:**
+---
 
-    * Use `train_model.py` to train your machine learning model and save it as `my_model.joblib` in the `models/` directory.
-    * Ensure your historical data is available in the `data/` directory.
+## 🚀 Usage
 
-2.  **Configure the live trader:**
-    Open `scripts/live_trader.py` and adjust the configuration settings at the top, such as the `SYMBOLS` list to define the assets you want to trade and `POSITION_SIZE` for your risk management.
+### Step 1 — Fetch historical market data
 
-3.  **Run the live trading script:**
-    With your virtual environment active, execute the main trading script.
+```bash
+python scripts/fetch_data.py
+```
 
-    ```
-    python scripts/live_trader.py
-    ```
+Downloads OHLCV data for all configured symbols into `data/`.
 
-    The script will begin its trading loop and will automatically log all trading activities to the `trade_logs/` directory.
+### Step 2 — Train the ML model
 
-## 📂 File Structure
+```bash
+python scripts/train_model.py
+```
 
-The project has a clear and logical file structure:
+Trains the model on historical data and saves it to `models/my_model.joblib`. Check console output for evaluation metrics.
 
-To see the content of the README.md file in a code block format, you can use the following markdown. This is the exact content that would be displayed on GitHub.
+### Step 3 — Run the live trader
 
+```bash
+python scripts/live_trader.py
+```
 
+Starts the live trading loop. The system will:
+- Load the serialized model
+- Restore any open positions from `trade_logs/positions.csv`
+- Begin the fetch → signal → execute → log cycle
 
-## ⚙️ Prerequisites
+### Step 4 — Visualize performance (optional)
 
-To run this project, you need:
+```bash
+python scripts/plot_advanced.py
+```
 
-* **Python** (3.8 or higher)
-* **pip** (Python package installer)
+Generates signal overlay charts, trade logs, and P&L visualizations.
 
-## 🔧 Installation
+---
 
-1.  **Clone the repository:**
+## ⚙️ Configuration
 
-    ```
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
-    ```
+All key parameters are defined at the top of `scripts/live_trader.py`:
 
-2.  **Activate the virtual environment:**
-    The project uses a virtual environment named `forex_venv`.
+```python
+# ── CONFIGURATION ──────────────────────────────────────────
+SYMBOLS        = ["AAPL", "TSLA", "GOOGL"]   # Assets to trade
+SLEEP_SECONDS  = 60                           # Loop interval (seconds)
+POSITION_SIZE  = 10                           # Units per trade
+MODEL_PATH     = "models/my_model.joblib"     # Path to serialized model
+LOG_PATH       = "trade_logs/positions.csv"   # Position persistence file
+# ────────────────────────────────────────────────────────────
+```
 
-    ```
-    # On Windows
-    forex_venv\Scripts\activate
-    # On macOS/Linux
-    source forex_venv/bin/activate
-    ```
-
-3.  **Install dependencies:**
-
-    ```
-    pip install -r requirements.txt
-    ```
-
-## 🚀 Getting Started
-
-1.  **Prepare your data and model:**
-
-    * Use `train_model.py` to train your machine learning model and save it as `my_model.joblib` in the `models/` directory.
-    * Ensure your historical data is available in the `data/` directory.
-
-2.  **Configure the live trader:**
-    Open `scripts/live_trader.py` and adjust the configuration settings at the top, such as the `SYMBOLS` list to define the assets you want to trade and `POSITION_SIZE` for your risk management.
-
-3.  **Run the live trading script:**
-    With your virtual environment active, execute the main trading script.
-
-    ```
-    python scripts/live_trader.py
-    ```
-
-    The script will begin its trading loop and will automatically log all trading activities to the `trade_logs/` directory.
+---
 
 ## 📂 File Structure
 
-The project has a clear and logical file structure:
+```
+Algo-Trading-with-Python/
+│
+├── data/                        # Raw OHLCV market data (CSV per symbol)
+│
+├── models/
+│   └── my_model.joblib          # Serialized trained ML model
+│
+├── scripts/
+│   ├── live_trader.py           # 🔴 Core: live trading loop + order execution
+│   ├── train_model.py           # Model training + joblib serialization
+│   ├── fetch_data.py            # Market data ingestion
+│   └── plot_advanced.py         # Visualization: signals, P&L, trade logs
+│
+├── stock-ml-genai-starter/      # Experimental GenAI integration starter
+│
+├── trade_logs/
+│   └── positions.csv            # Persistent open position state
+│
+├── dashboards/                  # Dashboard assets and visualizations
+│
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
 
-.
-├── data/                       # Market data for various symbols.
-├── dashboards/                 # Files for visualization and dashboards.
-├── forex-ml-genai-starter/     # Main project directory.
-├── forex_venv/                 # Virtual environment.
-├── models/                     # Directory to store the trained machine learning model.
-│   └── my_model.joblib
-├── scripts/                    # All executable scripts.
-│   ├── live_trader.py          # Core live trading script.
-│   ├── train_model.py          # Script for training the model.
-│   ├── fetch_data.py           # Script to fetch market data.
-│   └── ...
-├── trade_logs/                 # Automatically generated logs of trades.
-│   └── positions.csv
-├── README.md                   # This file.
-└── requirements.txt            # Project dependencies.
+---
+
+## 🔍 What I Learned / Design Highlights
+
+- **Full ML lifecycle in production context** — not just training, but serialization, deployment into a live loop, and inference at runtime
+- **State persistence without a database** — CSV-based position tracking is lightweight but robust enough for the use case
+- **Modular separation of concerns** — each script is independently runnable and testable, which mirrors real production ML system design
+- **Configurable parameters** — all trading variables are surfaced at the top of the execution script, not buried in logic
+
+---
 
 ## 🤝 Contributing
 
-This project is a great starting point for algorithmic trading. Feel free to fork the repository, add your own strategies, and contribute back to the community!
+Pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.
 
-1.  Fork the Project.
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the Branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
+```bash
+# Contribution flow
+git checkout -b feature/your-feature-name
+git commit -m "feat: describe your change"
+git push origin feature/your-feature-name
+# → Open a Pull Request
+```
+
+---
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for details.
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%"/>
+
+**Built by [Parth Sharma](https://www.linkedin.com/in/parth-sharma-work)**
+· [GitHub](https://github.com/ParthSharma-2) · [LinkedIn](https://www.linkedin.com/in/parth-sharma-work)
+
+</div>
